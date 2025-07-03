@@ -1,25 +1,19 @@
 import React, { useState, useEffect } from 'react';
 
-// Componente principal de la aplicación
 function App() {
   const [students, setStudents] = useState([]);
   const [studentToEdit, setStudentToEdit] = useState(null);
 
-  // Cargar datos del localStorage al iniciar la aplicación
+
   useEffect(() => {
     const storedStudents = JSON.parse(localStorage.getItem('students')) || [];
     setStudents(storedStudents);
   }, []);
 
-  // Guardar datos en localStorage cada vez que cambie el estado
   useEffect(() => {
     localStorage.setItem('students', JSON.stringify(students));
   }, [students]);
 
-  /**
-   * Función para agregar o actualizar un estudiante
-   * @param {Object} studentData - Datos del estudiante (nombre, asignatura, promedio)
-   */
   const addOrUpdateStudent = (studentData) => {
     if (studentToEdit) {
       // Actualizar estudiante existente
@@ -30,7 +24,7 @@ function App() {
       ));
       setStudentToEdit(null);
     } else {
-      // Agregar nuevo estudiante
+
       const newStudent = {
         id: Date.now(),
         ...studentData,
@@ -40,11 +34,6 @@ function App() {
     }
   };
 
-  /**
-   * Función para calcular la escala de apreciación basada en el promedio
-   * @param {number} promedio - Promedio del estudiante
-   * @returns {string} - Escala de apreciación
-   */
   const calculateScale = (promedio) => {
     const nota = parseFloat(promedio);
     if (nota >= 1.0 && nota <= 3.9) return "Deficiente";
@@ -54,27 +43,18 @@ function App() {
     return "Fuera de rango";
   };
 
-  /**
-   * Función para eliminar un estudiante
-   * @param {number} id - ID del estudiante a eliminar
-   */
   const deleteStudent = (id) => {
     if (window.confirm('¿Estás seguro de que deseas eliminar este estudiante?')) {
       setStudents(students.filter(student => student.id !== id));
     }
   };
 
-  /**
-   * Función para seleccionar un estudiante para editar
-   * @param {Object} student - Estudiante a editar
-   */
+
   const editStudent = (student) => {
     setStudentToEdit(student);
   };
 
-  /**
-   * Función para cancelar la edición
-   */
+
   const cancelEdit = () => {
     setStudentToEdit(null);
   };
@@ -112,7 +92,7 @@ function App() {
   );
 }
 
-// Componente del formulario para agregar/editar estudiantes
+
 function StudentForm({ addOrUpdateStudent, studentToEdit, cancelEdit }) {
   const [formData, setFormData] = useState({
     nombre: '',
@@ -121,7 +101,6 @@ function StudentForm({ addOrUpdateStudent, studentToEdit, cancelEdit }) {
   });
   const [errors, setErrors] = useState({});
 
-  // Llenar el formulario cuando se selecciona un estudiante para editar
   useEffect(() => {
     if (studentToEdit) {
       setFormData({
@@ -135,10 +114,7 @@ function StudentForm({ addOrUpdateStudent, studentToEdit, cancelEdit }) {
     setErrors({});
   }, [studentToEdit]);
 
-  /**
-   * Función para validar el formulario
-   * @returns {boolean} - True si el formulario es válido
-   */
+
   const validateForm = () => {
     const newErrors = {};
     
@@ -165,10 +141,6 @@ function StudentForm({ addOrUpdateStudent, studentToEdit, cancelEdit }) {
     return Object.keys(newErrors).length === 0;
   };
 
-  /**
-   * Función para manejar el envío del formulario
-   * @param {Event} e - Evento del formulario
-   */
   const handleSubmit = () => {
     if (validateForm()) {
       addOrUpdateStudent({
@@ -181,15 +153,11 @@ function StudentForm({ addOrUpdateStudent, studentToEdit, cancelEdit }) {
     }
   };
 
-  /**
-   * Función para manejar cambios en los inputs
-   * @param {Event} e - Evento del input
-   */
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
     
-    // Limpiar error del campo cuando el usuario empiece a escribir
+
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: '' }));
     }
@@ -296,7 +264,7 @@ function StudentForm({ addOrUpdateStudent, studentToEdit, cancelEdit }) {
               type="button"
               onClick={cancelEdit}
               style={{
-                backgroundColor: '#FFFFFF',
+                backgroundColor: '#95a5a6',
                 color: 'white',
                 padding: '12px 20px',
                 border: 'none',
@@ -314,7 +282,7 @@ function StudentForm({ addOrUpdateStudent, studentToEdit, cancelEdit }) {
   );
 }
 
-// Componente para mostrar la lista de estudiantes
+
 function StudentList({ students, deleteStudent, editStudent }) {
   if (students.length === 0) {
     return (
@@ -351,13 +319,8 @@ function StudentList({ students, deleteStudent, editStudent }) {
   );
 }
 
-// Componente para mostrar cada tarjeta de estudiante
 function StudentCard({ student, deleteStudent, editStudent }) {
-  /**
-   * Función para obtener el color de la escala de apreciación
-   * @param {string} escala - Escala de apreciación
-   * @returns {string} - Color hex
-   */
+
   const getScaleColor = (escala) => {
     switch (escala) {
       case 'Deficiente': return '#e74c3c';
@@ -436,11 +399,11 @@ function StudentCard({ student, deleteStudent, editStudent }) {
   );
 }
 
-// Componente para mostrar estadísticas
+
 function Statistics({ students }) {
   if (students.length === 0) return null;
 
-  // Calcular estadísticas
+
   const totalStudents = students.length;
   const averageGrade = students.reduce((sum, student) => sum + student.promedio, 0) / totalStudents;
   
